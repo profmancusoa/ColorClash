@@ -1,6 +1,6 @@
 # ColorClash
 
-ColorClash è la reimplementazione in JS del gioco Swell Foop è incluso in GNOME Games.
+ColorClash è la reimplementazione in JS del gioco Swell Foop incluso in GNOME Games.
 
 ![image](https://github.com/profmancusoa/ColorClash/assets/111191978/00661507-6082-4bf4-b0a8-b8e23b58db79)
 
