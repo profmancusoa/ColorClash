@@ -1,18 +1,45 @@
 <script>
     import { Cell } from '$lib/js/cell';
+    import { createEventDispatcher } from 'svelte';
 
     export let cell;
+    let dispatch = createEventDispatcher();
 
     const get_focus = () => {
-        cell.status = Cell.STATUS_ON;
+        // console.log(cell.row, cell.col)
+        // cell.status = Cell.STATUS_ON;
+        if(cell.status != Cell.STATUS_EMPTY)
+            dispatch('getFocus', {r: cell.row, c: cell.col});
     }
 
     const lost_focus = () => {
-        cell.status = Cell.STATUS_OFF;
+        // console.log(cell.row, cell.col)
+        // cell.status = Cell.STATUS_OFF;
+        if(cell.status != Cell.STATUS_EMPTY)
+            dispatch('lostFocus', {r: cell.row, c: cell.col});
+    }
+
+    const clash = () => {
+        // console.log(cell.row, cell.col)
+        if(cell.status != Cell.STATUS_EMPTY)
+            dispatch('clash', {r: cell.row, c: cell.col});
     }
 </script>
 
-<div class="cell cell-{cell.type}-{cell.status}"  on:mouseenter={get_focus} on:mouseleave={lost_focus} aria-hidden="true"></div>
+<div 
+    class="cell cell-{cell.type}-{cell.status}"  
+    on:mouseenter={get_focus} 
+    on:mouseleave={lost_focus} 
+    on:click={clash}
+    aria-hidden="true">
+</div>
+
+<!-- <div 
+    class="cell cell-{cell.type}-{cell.status}"  
+    on:click={clash}
+    aria-hidden="true">
+</div> -->
+
 
 <style>
     .icon {
@@ -28,6 +55,10 @@
         aspect-ratio: 1;
     }
     
+    .cell-1-empty, .cell-2-empty, .cell-3-empty {
+        background-color: black; 
+    }
+
     .cell-1-on {
         background: #b3e3eb url('/visibility.svg') no-repeat center center;
         background-size: cover; 

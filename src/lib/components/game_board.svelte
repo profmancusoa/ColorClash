@@ -6,6 +6,8 @@
 
     let board = new desktopBoard();
 
+    // console.log(board);
+
     onMount(() => {
     })
 
@@ -15,12 +17,38 @@
     function cambio() {
         for(let i  = 0; i < 10; i++) {
             for(let j = 0; j < 15; j++) {
-                board.getCell(i,j).status = Cell.STATUS_OFF;
+                board.getCell(i,j).status = Cell.STATUS_ON;
                
             }
         }
         refresh();
     }
+
+    const handlerGetFocus = (e) => {
+        // console.log("FOCUS:", e.detail.r, e.detail.c)
+        // console.log(board)
+        board.preClash(e.detail.r, e.detail.c);
+        board.preClashON();
+        // console.log(board)
+        refresh();
+    }
+
+    const handlerLostFocus = (e) => {
+        // console.log("defocus")
+        board.preClashOFF();
+        refresh();
+    }
+
+    const handlerClash = (e) => {
+        // console.log("clash")
+        board.clash();
+        // console.log("BOARD:",board)
+        refresh();
+        board.shiftDown();
+        refresh();
+        // console.log("BOARD:",board)
+    }
+
 </script>
 
 <button on:click={cambio}>CAMBIA</button>
@@ -28,7 +56,12 @@
 <div class="board visible">
     {#each {length:board.rows} as _, i}
         {#each {length: board.cols} as _, j}
-            <UIcell cell={board.getCell(i,j)} />
+            <UIcell 
+                cell={board.getCell(i,j)} 
+                on:getFocus={handlerGetFocus}
+                on:lostFocus={handlerLostFocus}
+                on:clash={handlerClash}
+            />
         {/each}    
     {/each}
 </div>
