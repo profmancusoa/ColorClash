@@ -1,5 +1,5 @@
-import { Cell } from "./cell"; 
-import { VistiList } from "./visit_list";
+import { Cell } from "./cell.js"; 
+import { VistiList } from "./visit_list.js";
 
 const DESKTOP_ROW = 10;
 const DESKTOP_COL = 15;
@@ -19,13 +19,45 @@ class Board {
         this.#cols = c;
 
         //just for debug
-        this.#board[9][12].type = 2; //just for debug
-        this.#board[9][13].type = 3;
-        this.#board[9][14].type = 3;
-        this.#board[8][13].type = 3;
-        this.#board[8][14].type = 1;
+        // this.#board[9][12].type = 2; //just for debug
+        // this.#board[9][13].type = 3;
+        // this.#board[9][14].type = 3;
+        // this.#board[8][13].type = 3;
+        // this.#board[8][14].type = 1;
 
-        // this.#preClash = new VistiList();
+        //1 blue
+        //2 giallo
+        //3 rosso
+        // this.#board[0][0].type = 1;
+        // this.#board[0][1].type = 1;
+        // this.#board[0][2].type = 3;
+        // this.#board[0][3].type = 3;
+        // this.#board[0][4].type = 3 ;
+
+        // this.#board[1][0].type = 2;
+        // this.#board[1][1].type = 3;
+        // this.#board[1][2].type = 2;
+        // this.#board[1][3].type = 1;
+        // this.#board[1][4].type = 1;
+
+        // this.#board[2][0].type = 2;
+        // this.#board[2][1].type = 3;
+        // this.#board[2][2].type = 2;
+        // this.#board[2][3].type = 3;
+        // this.#board[2][4].type = 3;
+
+        // this.#board[3][0].type = 2;
+        // this.#board[3][1].type = 2;
+        // this.#board[3][2].type = 1;
+        // this.#board[3][3].type = 3;
+        // this.#board[3][4].type = 1;
+
+        // this.#board[4][0].type = 3;
+        // this.#board[4][1].type = 3;
+        // this.#board[4][2].type = 1;
+        // this.#board[4][3].type = 2;
+        // this.#board[4][4].type = 3;
+    
     }
 
     #random() {  
@@ -52,20 +84,36 @@ class Board {
         console.log("REFRESH")
     }
 
-    #getNCell(r, c) {
-        return this.getCell(r - 1, c); 
+    // #getNCell(r, c) {
+    //     return this.getCell(r - 1, c); 
+    // }
+
+    // #getSCell(r, c) {
+    //     return this.getCell(r + 1, c); 
+    // }
+
+    // #getECell(r, c) {
+    //     return this.getCell(r , c + 1); 
+    // }
+
+    // #getWCell(r, c) {
+    //     return this.getCell(r , c - 1); 
+    // }
+
+    #getNCell(c) {
+        return this.getCell(c.row - 1, c.col); 
     }
 
-    #getSCell(r, c) {
-        return this.getCell(r + 1, c); 
+    #getSCell(c) {
+        return this.getCell(c.row + 1, c.col); 
     }
 
-    #getECell(r, c) {
-        return this.getCell(r , c + 1); 
+    #getECell(c) {
+        return this.getCell(c.row , c.col + 1); 
     }
 
-    #getWCell(r, c) {
-        return this.getCell(r , c - 1); 
+    #getWCell(c) {
+        return this.getCell(c.row , c.col - 1); 
     }
 
     preClashON() {
@@ -81,67 +129,74 @@ class Board {
         this.#preClash.length = 0;
     }
 
+    // preClash(r, c) {
+    //     // console.log("PRE CLASH OF CELL:",r , c);
+    //     this.#preClash.length = 0;
+    //     let start = this.getCell(r, c); //initial cell from which start search of clashing cells
+    //     let startType = start.type;
+       
+    //     let toVisit = new VistiList();
+    //     let toClash = new VistiList();
+    //     toVisit.add(start);
+
+    //     while(toVisit.length > 0) {
+    //         let neighbors = [];
+    //         let current = toVisit.remove();
+    //         let crow = current.row;
+    //         let ccol = current.col;
+    //         toClash.add(current);
+
+    //         neighbors.push(this.#getNCell(crow, ccol));
+    //         neighbors.push(this.#getSCell(crow, ccol));
+    //         neighbors.push(this.#getECell(crow, ccol));
+    //         neighbors.push(this.#getWCell(crow, ccol));
+
+    //         neighbors.forEach(c => {
+    //             if(c && 
+    //                c.type == startType &&
+    //                c.status != Cell.STATUS_EMPTY &&
+    //                !toClash.has(c)
+    //                )
+    //                 toVisit.add(c);
+    //         });
+    //     }
+        
+    //     if(toClash.length > 1)
+    //         this.#preClash = toClash;
+
+    // }
+
     preClash(r, c) {
         // console.log("PRE CLASH OF CELL:",r , c);
-        this.#preClash = [];
-        let nCell = this.#getNCell(r,c);
-        let sCell = this.#getSCell(r,c);
-        let eCell = this.#getECell(r,c);
-        let wCell = this.#getWCell(r,c);
-        
-        // console.log("NCELL:", nCell)
-        // console.log("SCELL:", sCell)
-        // console.log("ECELL:", eCell)
-        // console.log("WCELL:", wCell)
-
-        // let toVisit = new Set();
-        // let toClash = new Set();
+        this.#preClash.length = 0;
+        let toVisit = new VistiList();
+        let toClash = new VistiList();
 
         let start = this.getCell(r, c); //initial cell from which start search of clashing cells
         let startType = start.type;
-        // toVisit.add(start);
-
-        // while(toVisit.size > 0) {
-            
-        //     let nCell = this.#getNCell(r,c);
-        //     let sCell = this.#getSCell(r,c);
-        //     let eCell = this.#getECell(r,c);
-        //     let wCell = this.#getWCell(r,c);
-        // }
-        
-        let toVisit = new VistiList();
-        let toClash = new VistiList();
         toVisit.add(start);
 
         while(toVisit.length > 0) {
             let neighbors = [];
             let current = toVisit.remove();
-            let crow = current.row;
-            let ccol = current.col;
-            // console.log("CURRENT:", current)
+            // let crow = current.row;
+            // let ccol = current.col;
             toClash.add(current);
 
-            neighbors.push(this.#getNCell(crow, ccol));
-            neighbors.push(this.#getSCell(crow, ccol));
-            neighbors.push(this.#getECell(crow, ccol));
-            neighbors.push(this.#getWCell(crow, ccol));
+            neighbors.push(this.#getNCell(current));
+            neighbors.push(this.#getSCell(current));
+            neighbors.push(this.#getECell(current));
+            neighbors.push(this.#getWCell(current));
 
             neighbors.forEach(c => {
                 if(c && 
                    c.type == startType &&
+                   c.status != Cell.STATUS_EMPTY &&
                    !toClash.has(c)
                    )
                     toVisit.add(c);
             });
-
-            
-        
         }
-        
-        // if(toClash.length > 1) 
-        //     toClash.map(c => c.status = Cell.STATUS_ON);
-           
-        // this.refresh();
         
         if(toClash.length > 1)
             this.#preClash = toClash;
