@@ -47,6 +47,8 @@
         board.shiftDown();
         refresh();
         // console.log("BOARD:",board)
+        board.shiftLeft();
+        refresh();
     }
 
 </script>

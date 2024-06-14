@@ -28,35 +28,35 @@ class Board {
         //1 blue
         //2 giallo
         //3 rosso
-        // this.#board[0][0].type = 1;
-        // this.#board[0][1].type = 1;
-        // this.#board[0][2].type = 3;
-        // this.#board[0][3].type = 3;
-        // this.#board[0][4].type = 3 ;
+        this.#board[0][0].type = 1;
+        this.#board[0][1].type = 1;
+        this.#board[0][2].type = 3;
+        this.#board[0][3].type = 3;
+        this.#board[0][4].type = 3 ;
 
-        // this.#board[1][0].type = 2;
-        // this.#board[1][1].type = 3;
-        // this.#board[1][2].type = 2;
-        // this.#board[1][3].type = 1;
-        // this.#board[1][4].type = 1;
+        this.#board[1][0].type = 2;
+        this.#board[1][1].type = 3;
+        this.#board[1][2].type = 2;
+        this.#board[1][3].type = 1;
+        this.#board[1][4].type = 1;
 
-        // this.#board[2][0].type = 2;
-        // this.#board[2][1].type = 3;
-        // this.#board[2][2].type = 2;
-        // this.#board[2][3].type = 3;
-        // this.#board[2][4].type = 3;
+        this.#board[2][0].type = 2;
+        this.#board[2][1].type = 3;
+        this.#board[2][2].type = 2;
+        this.#board[2][3].type = 3;
+        this.#board[2][4].type = 3;
 
-        // this.#board[3][0].type = 2;
-        // this.#board[3][1].type = 2;
-        // this.#board[3][2].type = 1;
-        // this.#board[3][3].type = 3;
-        // this.#board[3][4].type = 1;
+        this.#board[3][0].type = 2;
+        this.#board[3][1].type = 2;
+        this.#board[3][2].type = 1;
+        this.#board[3][3].type = 3;
+        this.#board[3][4].type = 1;
 
-        // this.#board[4][0].type = 3;
-        // this.#board[4][1].type = 3;
-        // this.#board[4][2].type = 1;
-        // this.#board[4][3].type = 2;
-        // this.#board[4][4].type = 3;
+        this.#board[4][0].type = 3;
+        this.#board[4][1].type = 3;
+        this.#board[4][2].type = 1;
+        this.#board[4][3].type = 2;
+        this.#board[4][4].type = 3;
     
     }
 
@@ -223,6 +223,16 @@ class Board {
         return null;
     }
 
+    findRight(cell) {
+        let colCheck = cell.col + 1;
+        while(colCheck <= this.#cols - 1) {
+            let rightCell = this.getCell(cell.row, colCheck--); 
+            if(rightCell.status != Cell.STATUS_EMPTY)
+                return rightCell;
+        }
+        return null;
+    }
+
     swapCells(c1, c2) {
         //swap two cell of the board using a temp cell
         //it is very important to update row and col 
@@ -255,6 +265,24 @@ class Board {
                     this.swapCells(c, topCell);
             })
         }
+    }
+
+    moveLeft() {
+
+    }
+
+    shiftLeft() {
+        console.log("SHIFT LEFT")
+        let emptyCells = this.#board[this.#rows - 1].filter(c => c.status == Cell.STATUS_EMPTY);
+        emptyCells.forEach(cell => {
+            for(let c = cell.col; c < this.#cols - 1; c++) {
+                for(let r = this.#rows - 1; r >= 0; r--) {
+                    let leftCell = this.getCell(r, c);
+                    let rightCell = this.getCell(r, c + 1);
+                    this.swapCells(leftCell, rightCell);
+                }
+            }
+        });
     }
 }
 
