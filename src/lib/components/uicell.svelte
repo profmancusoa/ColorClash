@@ -3,6 +3,7 @@
     import { createEventDispatcher } from 'svelte';
 
     export let cell;
+    export let mobile;
     const TOUCH_THRESHOLD = 200;
     let tStartTime = 0;
     let tEndTime = 0;
@@ -40,48 +41,24 @@
             clash();
         }
     }
-
-    // const touchEnd = () =>{
-    //     console.log("END")
-    //     // console.log("TEND:", Date.now())
-    //     tEndTime = Date.now();
-    //     let touchPeriod = tEndTime - tStartTime;
-    //     console.log(touchPeriod)
-    //     if(touchPeriod < TOUCH_THRESHOLD) {
-    //         if(preClash == false) {
-    //             console.log("pre-clash")
-    //             get_focus();
-    //             setTimeout(() => {
-    //                 if(preClash == false) {
-    //                     lost_focus();
-    //                     preClash = true;
-    //                 }
-    //             }, 1500);
-    //         }
-    //     } else {
-    //         if(preClash == true) {
-    //             console.log("clash")
-    //             preClash = false;
-    //             clash();
-    //         }
-    //     }
-    // }
 </script>
 
-<!-- <div 
-    class="cell cell-{cell.type}-{cell.status}"  
-    on:mouseenter={get_focus} 
-    on:mouseleave={lost_focus} 
-    on:click={clash}
-    aria-hidden="true">
-</div> -->
 
-<!-- //mobileBoard -->
-<div 
-    class="cell cell-{cell.type}-{cell.status}"  
-    on:touchstart={touchStart} 
-    aria-hidden="true">
-</div>
+{#if mobile}
+    <div 
+        class="cell cell-{cell.type}-{cell.status}"  
+        on:touchstart={touchStart} 
+        aria-hidden="true">
+    </div>
+{:else}
+    <div 
+        class="cell cell-{cell.type}-{cell.status}"  
+        on:mouseenter={get_focus} 
+        on:mouseleave={lost_focus} 
+        on:click={clash}
+        aria-hidden="true">
+    </div>
+{/if}
 
 <style>
     :root {

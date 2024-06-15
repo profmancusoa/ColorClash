@@ -4,6 +4,7 @@
     import EndGame from "../lib/components/end_game.svelte";
     import { fly } from "svelte/transition"
     import { create_in_transition } from "svelte/internal"
+    import { onMount } from 'svelte';
 
     let currentScore = 0;
     let totalScore = 0;
@@ -13,6 +14,10 @@
     let totalBestComp;
     let totalBestAnim;
     let gameOver = false;
+
+    onMount(() => {
+        bestScore = getBestScore();
+    });
 
     const getBestScore = () => {
         let bestScore = localStorage.getItem('bestScore');

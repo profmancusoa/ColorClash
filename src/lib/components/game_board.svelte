@@ -6,13 +6,14 @@
 
     let dispatch = createEventDispatcher();
     let board = [0][0];
+    let mobile = false;
 
     const isMobile = (ua) => {
 	    return ua.includes('Android') || ua.includes('Mobile') || ua.includes('iPhone');
     };
 
     onMount(() => {
-        let mobile = isMobile(navigator.userAgent);
+        mobile = isMobile(navigator.userAgent);
         board = mobile ? new mobileBoard() : new desktopBoard();
     });
 
@@ -59,6 +60,7 @@
                 on:getFocus={handlerGetFocus}
                 on:lostFocus={handlerLostFocus}
                 on:clash={handlerClash}
+                bind:mobile={mobile}
             />
         {/each}    
     {/each}
