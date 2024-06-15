@@ -1,59 +1,36 @@
 <script>
     import UIcell from "./uicell.svelte";
-    import { Cell } from '$lib/js/cell.js'
     import { desktopBoard, mobileBoard } from '$lib/js/board.js';
-    import { onMount } from "svelte";
+    import { createEventDispatcher } from "svelte";
 
+    let dispatch = createEventDispatcher();
     let board = new desktopBoard();
-
-    // console.log(board);
-
-    onMount(() => {
-    })
 
     const refresh = () => { board = board };
 
-
-    function cambio() {
-        for(let i  = 0; i < 10; i++) {
-            for(let j = 0; j < 15; j++) {
-                board.getCell(i,j).status = Cell.STATUS_ON;
-               
-            }
-        }
-        refresh();
-    }
-
     const handlerGetFocus = (e) => {
-        // console.log("FOCUS:", e.detail.r, e.detail.c)
-        // console.log(board)
         board.preClash(e.detail.r, e.detail.c);
         board.preClashON();
-        // console.log(board)
         refresh();
     }
 
     const handlerLostFocus = (e) => {
-        // console.log("defocus")
         board.preClashOFF();
         refresh();
     }
 
     const handlerClash = (e) => {
-        // console.log("clash")
-        board.clash();
-        // console.log("BOARD:",board)
+        let score = board.clash();
         refresh();
         board.shiftDown();
-        refresh();
-        // console.log("BOARD:",board)
         board.shiftLeft();
         refresh();
+
+        dispatch('score', score);
+        // console.log("SCORE:",score)
     }
 
 </script>
-
-<button on:click={cambio}>CAMBIA</button>
 
 <div class="board visible">
     {#each {length:board.rows} as _, i}
@@ -68,13 +45,12 @@
     {/each}
 </div>
 
-<style>
-    
+<style>    
     .board {
         border-radius: 0.8rem;
         padding: 0.3rem;
-        background-color: black;
-        width: 60%;
+        background-color: rgba(0, 0, 0, 1);
+        width: 90%;
         display: grid;
         grid-template-columns: repeat(15, 1fr);
         row-gap: 2px;

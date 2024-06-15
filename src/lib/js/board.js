@@ -17,47 +17,6 @@ class Board {
         this.#board = [...Array(r)].map((row,i) => [...Array(c)].map((col,j) => new Cell(i, j, this.#random())));
         this.#rows = r;
         this.#cols = c;
-
-        //just for debug
-        // this.#board[9][12].type = 2; //just for debug
-        // this.#board[9][13].type = 3;
-        // this.#board[9][14].type = 3;
-        // this.#board[8][13].type = 3;
-        // this.#board[8][14].type = 1;
-
-        //1 blue
-        //2 giallo
-        //3 rosso
-        this.#board[0][0].type = 1;
-        this.#board[0][1].type = 1;
-        this.#board[0][2].type = 3;
-        this.#board[0][3].type = 3;
-        this.#board[0][4].type = 3 ;
-
-        this.#board[1][0].type = 2;
-        this.#board[1][1].type = 3;
-        this.#board[1][2].type = 2;
-        this.#board[1][3].type = 1;
-        this.#board[1][4].type = 1;
-
-        this.#board[2][0].type = 2;
-        this.#board[2][1].type = 3;
-        this.#board[2][2].type = 2;
-        this.#board[2][3].type = 3;
-        this.#board[2][4].type = 3;
-
-        this.#board[3][0].type = 2;
-        this.#board[3][1].type = 2;
-        this.#board[3][2].type = 1;
-        this.#board[3][3].type = 3;
-        this.#board[3][4].type = 1;
-
-        this.#board[4][0].type = 3;
-        this.#board[4][1].type = 3;
-        this.#board[4][2].type = 1;
-        this.#board[4][3].type = 2;
-        this.#board[4][4].type = 3;
-    
     }
 
     #random() {  
@@ -81,24 +40,7 @@ class Board {
 
     refresh() {
         this.#board[0] = [...this.#board[0]];
-        console.log("REFRESH")
     }
-
-    // #getNCell(r, c) {
-    //     return this.getCell(r - 1, c); 
-    // }
-
-    // #getSCell(r, c) {
-    //     return this.getCell(r + 1, c); 
-    // }
-
-    // #getECell(r, c) {
-    //     return this.getCell(r , c + 1); 
-    // }
-
-    // #getWCell(r, c) {
-    //     return this.getCell(r , c - 1); 
-    // }
 
     #getNCell(c) {
         return this.getCell(c.row - 1, c.col); 
@@ -118,56 +60,14 @@ class Board {
 
     preClashON() {
         this.#preClash.map(c => c.status = Cell.STATUS_ON);
-        // console.log("CLASH LIST ON:");
-        // this.#preClash.forEach(c => console.log(c))
     }
 
     preClashOFF() {
         this.#preClash.map(c => c.status = Cell.STATUS_OFF);
-        // console.log("CLASH LIST OFF:");
-        // this.#preClash.forEach(c => console.log(c))
         this.#preClash.length = 0;
     }
 
-    // preClash(r, c) {
-    //     // console.log("PRE CLASH OF CELL:",r , c);
-    //     this.#preClash.length = 0;
-    //     let start = this.getCell(r, c); //initial cell from which start search of clashing cells
-    //     let startType = start.type;
-       
-    //     let toVisit = new VistiList();
-    //     let toClash = new VistiList();
-    //     toVisit.add(start);
-
-    //     while(toVisit.length > 0) {
-    //         let neighbors = [];
-    //         let current = toVisit.remove();
-    //         let crow = current.row;
-    //         let ccol = current.col;
-    //         toClash.add(current);
-
-    //         neighbors.push(this.#getNCell(crow, ccol));
-    //         neighbors.push(this.#getSCell(crow, ccol));
-    //         neighbors.push(this.#getECell(crow, ccol));
-    //         neighbors.push(this.#getWCell(crow, ccol));
-
-    //         neighbors.forEach(c => {
-    //             if(c && 
-    //                c.type == startType &&
-    //                c.status != Cell.STATUS_EMPTY &&
-    //                !toClash.has(c)
-    //                )
-    //                 toVisit.add(c);
-    //         });
-    //     }
-        
-    //     if(toClash.length > 1)
-    //         this.#preClash = toClash;
-
-    // }
-
     preClash(r, c) {
-        // console.log("PRE CLASH OF CELL:",r , c);
         this.#preClash.length = 0;
         let toVisit = new VistiList();
         let toClash = new VistiList();
@@ -179,9 +79,8 @@ class Board {
         while(toVisit.length > 0) {
             let neighbors = [];
             let current = toVisit.remove();
-            // let crow = current.row;
-            // let ccol = current.col;
-            toClash.add(current);
+            if(!toClash.has(current))
+                toClash.add(current);
 
             neighbors.push(this.#getNCell(current));
             neighbors.push(this.#getSCell(current));
@@ -200,17 +99,16 @@ class Board {
         
         if(toClash.length > 1)
             this.#preClash = toClash;
-
     }
 
     clash() {
-        console.log("CLASH CLASH CLASH")
-        // console.log(this.#preClash)
+        let score = Math.pow((this.#preClash.length - 2),2);
         this.#preClash.map(c => {
             c.status = Cell.STATUS_EMPTY;
-        })
+        });
         this.#preClash.length = 0;
-        // this.shiftDown();
+
+        return score;
     }
 
     findTop(cell) {
@@ -237,28 +135,20 @@ class Board {
         //swap two cell of the board using a temp cell
         //it is very important to update row and col 
         // for the swapped cells
-        // let cellTmp = c2;
-        console.log("SWAP:", c1, c2)
-        
+        // let cellTmp = c2;        
+        let [tmpR, tmpC] = [c1.row, c1.col];
+
         this.#board[c2.row][c2.col] = c1;
         this.#board[c1.row][c1.col] = c2;
-        // let tmpR = c1.row;
-        // let tmpC = c1.col;
-        let [tmpR, tmpC] = [c1.row, c1.col];
         c1.row = c2.row;
         c1.col = c2.col;
         c2.row = tmpR;
         c2.col = tmpC;
-        console.log("BOARD:", this.#board)
     }
 
     shiftDown() {
-        // console.log("SHIFT DOWN:", this.#board[9])
         for(let r = this.#rows - 1; r > 0; r--) {
-        // let r = 9;    
-        console.log("SHIFT DOWN:", r);
             let emptyCells = this.#board[r].filter(c => c.status == Cell.STATUS_EMPTY);
-            console.log("EMPTY:", emptyCells)
             emptyCells.forEach(c => {
                 let topCell = this.findTop(c);
                 if(topCell && topCell.status != Cell.STATUS_EMPTY)
@@ -267,12 +157,7 @@ class Board {
         }
     }
 
-    moveLeft() {
-
-    }
-
     shiftLeft() {
-        console.log("SHIFT LEFT")
         let emptyCells = this.#board[this.#rows - 1].filter(c => c.status == Cell.STATUS_EMPTY);
         emptyCells.forEach(cell => {
             for(let c = cell.col; c < this.#cols - 1; c++) {

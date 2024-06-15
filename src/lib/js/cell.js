@@ -8,7 +8,6 @@ export class Cell {
     #type = 1;  // type of cell (1..3 as we have 3 colors)
     #status = STATUS_OFF; // imagine a cell can be ON (light color) and off (dark color) or empty
 
-
     constructor(r, c, type) {
         this.#type = type;
         this.#r = r;

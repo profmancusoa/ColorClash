@@ -6,21 +6,16 @@
     let dispatch = createEventDispatcher();
 
     const get_focus = () => {
-        // console.log(cell.row, cell.col)
-        // cell.status = Cell.STATUS_ON;
         if(cell.status != Cell.STATUS_EMPTY)
             dispatch('getFocus', {r: cell.row, c: cell.col});
     }
 
     const lost_focus = () => {
-        // console.log(cell.row, cell.col)
-        // cell.status = Cell.STATUS_OFF;
         if(cell.status != Cell.STATUS_EMPTY)
             dispatch('lostFocus', {r: cell.row, c: cell.col});
     }
 
     const clash = () => {
-        // console.log(cell.row, cell.col)
         if(cell.status != Cell.STATUS_EMPTY)
             dispatch('clash', {r: cell.row, c: cell.col});
     }
@@ -33,13 +28,6 @@
     on:click={clash}
     aria-hidden="true">
 </div>
-
-<!-- <div 
-    class="cell cell-{cell.type}-{cell.status}"  
-    on:click={clash}
-    aria-hidden="true">
-</div> -->
-
 
 <style>
     .icon {
@@ -56,7 +44,7 @@
     }
     
     .cell-1-empty, .cell-2-empty, .cell-3-empty {
-        background-color: black; 
+        background-color: transparent; 
     }
 
     .cell-1-on {
