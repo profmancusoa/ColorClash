@@ -4,7 +4,6 @@
     import EndGame from "../lib/components/end_game.svelte";
     import { fly } from "svelte/transition"
     import { create_in_transition } from "svelte/internal"
-    import { onMount } from 'svelte';
 
     let currentScore = 0;
     let totalScore = 0;
@@ -14,10 +13,6 @@
     let totalBestComp;
     let totalBestAnim;
     let gameOver = false;
-
-    onMount(() => {
-        bestScore = getBestScore();
-    });
 
     const getBestScore = () => {
         let bestScore = localStorage.getItem('bestScore');
@@ -42,25 +37,23 @@
     }
 </script>
 
-<button on:click={() => gameOver = true}>END</button>
-
 <!-- disclaimer per modalità landscape
 possiamo giocare solo in verticale/portrait -->
 <Disclaimer />
 
 <div class="wrapper">
-    <div class="col-left">
+    <div class="col-left-top visible">
         <p class="string rot-left">COLOR</p>
         <p class="string rot-right">CLASH</p>
     </div>
-    <div class="col-center">
+    <div class="col-center-top visible">
         {#if gameOver == false}
-            <GameBoard on:score={updateScore}/>
+            <GameBoard on:score={updateScore} on:gameOver={() => gameOver =  true} />
         {:else}
-            <EndGame score={totalScore} on:newGame={() => gameOver = false}/>
+            <EndGame score={totalScore} on:newGame={() => { gameOver = false; totalScore = 0}}/>
         {/if}
     </div>
-    <div class="col-right">
+    <div class="col-right-top visible">
         <div>
             <p class="string score-title">BEST SCORE</p>
             <p class="string score-score" bind:this={totalBestComp}>{bestScore}</p>
@@ -74,6 +67,7 @@ possiamo giocare solo in verticale/portrait -->
 
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Londrina+Solid:wght@100;300;400;900&display=swap');
+
     :global(*) {
         margin: 0;
         padding: 0;
@@ -82,12 +76,6 @@ possiamo giocare solo in verticale/portrait -->
     :global(body)  { 
         background: rgb(129,202,214);
         background: linear-gradient(60deg, rgba(129,202,214,1) 0%, rgba(237,205,68,1) 49%, rgba(220,62,38,1) 100%);
-        /* display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: space-around; */
-        /* width: 100%; */
-        /* height: 100vh; */
     }
 
     .string {
@@ -98,57 +86,109 @@ possiamo giocare solo in verticale/portrait -->
         text-align: center;
     }
 
-    .rot-left {
-        rotate: -10deg;
-        /* font-size: 7rem; */
-        font-size: 6vw;
+
+    @media only screen and (min-width: 1023px) {
+        .wrapper {
+            width: 100%;
+            height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 2.5fr 1.1fr;
+        }
+
+        .score-title {
+           font-size: 4vw;
+        }
+
+        .score-score {
+            font-size: 6vw;
+        }
+
+        .rot-left {
+            rotate: -10deg;
+            font-size: 6vw;
+        }
+
+        .rot-right {
+            rotate: 10deg;
+            font-size: 7vw;
+        }
+
+        .col-left-top {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-evenly;        
+        }
+
+        .col-center-top {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-around;
+        }
+
+        .col-right-top {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10vh;
+        }
     }
 
-    .rot-right {
-        rotate: 10deg;
-        font-size: 7vw;
+    @media only screen and (orientation:portrait) and (max-width: 1023px) {
+        .wrapper {
+            width: 100%;
+            height: 100vh;
+            display: grid;
+            grid-template-rows: 1fr auto 1fr;
+        }
+
+        .score-title {
+           font-size: 6vw;
+        }
+
+        .score-score {
+            font-size: 8vw;
+        }
+
+        .rot-left {
+            rotate: -10deg;
+            font-size: 8vw;
+        }
+
+        .rot-right {
+            rotate: 10deg;
+            font-size: 9vw;
+        }
+
+        .col-left-top {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-evenly;        
+        }
+
+        .col-center-top {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-around;
+        }
+
+
+        .col-right-top {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 10vh;
+        }
     }
 
-    .score-title {
-        font-size: 4vw;
-    }
-
-    .score-score {
-        font-size: 6vw;
-    }
-
-    .wrapper {
-        width: 100%;
-        height: 100vh;
-        display: grid;
-        grid-template-columns: 1fr 2.5fr 1.1fr;
-    }
-
-    div {
-        border: 0px solid black;
-        width: 100%;
-    }
-
-    .col-left {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: space-evenly;        
-    }
-
-    .col-center {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: space-around;
-    }
-
-
-    .col-right {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 10vh;
+    @media only screen and (orientation:landscape) and (max-width: 1023px) {    
+        .visible {
+            display: none;
+        }
     }
 </style>

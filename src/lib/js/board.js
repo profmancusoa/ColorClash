@@ -1,10 +1,11 @@
+import { number } from "mathjs";
 import { Cell } from "./cell.js"; 
 import { VistiList } from "./visit_list.js";
 
 const DESKTOP_ROW = 10;
 const DESKTOP_COL = 15;
-const MOBILE_ROW = 15;
-const MOBILE_COL = 10;
+const MOBILE_ROW = 10;
+const MOBILE_COL = 8;
 
 class Board {
     #COLORS = 3;
@@ -12,6 +13,7 @@ class Board {
     #rows = 0;
     #cols = 0;
     #preClash = new VistiList();
+    #gameOverThreshold = 15;
 
     constructor(r, c) {
         this.#board = [...Array(r)].map((row,i) => [...Array(c)].map((col,j) => new Cell(i, j, this.#random())));
@@ -36,10 +38,6 @@ class Board {
             r < this.#rows &&
             c >= 0 &&
             c < this.#cols ? this.#board[r][c] : null;
-    }
-
-    refresh() {
-        this.#board[0] = [...this.#board[0]];
     }
 
     #getNCell(c) {
@@ -102,7 +100,14 @@ class Board {
     }
 
     clash() {
-        let score = Math.pow((this.#preClash.length - 2),2);
+        let score = 0;
+
+        //calculate score if there are elements in the preClash list
+        //score = (number of cells -2)^2 
+        if(this.#preClash.length > 0)
+            score = Math.pow((this.#preClash.length - 2),2);
+        
+        //clash and destroy cells part of the selected group
         this.#preClash.map(c => {
             c.status = Cell.STATUS_EMPTY;
         });
@@ -146,7 +151,7 @@ class Board {
         c2.col = tmpC;
     }
 
-    shiftDown() {
+    #shiftDown() {
         for(let r = this.#rows - 1; r > 0; r--) {
             let emptyCells = this.#board[r].filter(c => c.status == Cell.STATUS_EMPTY);
             emptyCells.forEach(c => {
@@ -157,7 +162,7 @@ class Board {
         }
     }
 
-    shiftLeft() {
+    #shiftLeft() {
         let emptyCells = this.#board[this.#rows - 1].filter(c => c.status == Cell.STATUS_EMPTY);
         emptyCells.forEach(cell => {
             for(let c = cell.col; c < this.#cols - 1; c++) {
@@ -168,6 +173,40 @@ class Board {
                 }
             }
         });
+    }
+
+    shiftCells() {
+        this.#shiftDown();
+        this.#shiftLeft();
+    }
+
+    #cellCountNeighbors(cell) {
+        let neighbors = [
+            this.#getNCell(cell),
+            this.#getSCell(cell),
+            this.#getECell(cell),
+            this.#getWCell(cell)
+        ];
+
+        return neighbors.filter(c => c && c.type == cell.type && c.status != Cell.STATUS_EMPTY).length;
+    }
+
+    isGameOver() {
+        // when the number of cells reach the gameOverThreshold number
+        // for each cell count the number of neighbors
+        // and sum up to find the total number of neighbors
+        // if greater than zero there is at least one more user move
+        // else the game is over 
+        let totalNeighbors = 0;
+        let cells = this.#board.flat(1).filter(c => c.status != Cell.STATUS_EMPTY);
+        
+        if(cells.length <= this.#gameOverThreshold) {
+            cells.forEach(c => {
+                totalNeighbors += this.#cellCountNeighbors(c)
+            });
+            return totalNeighbors == 0;
+        }
+        return false;
     }
 }
 

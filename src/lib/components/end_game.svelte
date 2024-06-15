@@ -5,7 +5,7 @@
     let dispatch = createEventDispatcher();
 </script>
 
-<div class="score string">
+<div class="score string visible">
     <p class="score-size">Complimenti hai totalizzato</p>
     <p class="score-size">{score} punti</p>
     <button on:click={() => dispatch('newGame')}>Nuova Partita</button>
@@ -60,5 +60,39 @@
         background-position: right center;
         color: #fff;
         transform: scale(1.2);
+    }
+
+    @media only screen and (orientation:portrait) and (max-width: 1023px) {
+        .score {
+            border-radius: 0.8rem;
+            padding: 3rem;
+            background-color: rgba(0, 0, 0, 1);
+            width: 60%;
+            height: 50vh;
+            color: #fdea92;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 6vh;
+        }
+        
+        .string {
+            font-family: "Londrina Solid", sans-serif;
+            font-weight: bold;
+            font-style: normal;
+            color: #fdea92;
+            text-align: center;
+        }
+
+        .score-size {
+            font-size: 9vw;
+        }
+    }
+
+    @media only screen and (orientation:landscape) and (max-width: 1023px) {    
+        .visible {
+            display: none;
+        }
     }
 </style>
