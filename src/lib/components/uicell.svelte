@@ -87,7 +87,7 @@
     }
 
     @keyframes cell-1-preclash-in {
-        from { background-color: var(--cell-1-off);}
+        from { background-color: var(--cell-1-off); }
         to { background-color: var(--cell-1-on); }
     }
 

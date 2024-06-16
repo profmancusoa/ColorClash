@@ -17,15 +17,11 @@
 possiamo giocare solo in verticale/portrait -->
 <Disclaimer />
 
-<!-- Main game logic -->
 <div class="wrapper">
     <GameTitle />
     <div class="col-center-top visible">
-        {#if gameOver == false}
-            <GameBoard on:gameOver={() => gameOver =  true} />
-        {:else}
-            <EndGame on:newGame={() => { gameOver = false; $totalScore = 0}}/>
-        {/if}
+        <GameBoard show={!gameOver} on:gameOver={() => gameOver =  true} />
+        <EndGame show={gameOver} on:newGame={() => { gameOver = false; $totalScore = 0}}/>
     </div>
     <GameScore />
 </div>

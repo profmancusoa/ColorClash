@@ -5,15 +5,19 @@
 <script>
     import { createEventDispatcher } from "svelte";
     import { totalScore} from '../js/store.js';
+    import { fly } from "svelte/transition";
 
+    export let show;
     let dispatch = createEventDispatcher();
 </script>
 
-<div class="score string visible">
-    <p class="score-size">Complimenti hai totalizzato</p>
-    <p class="score-size">{$totalScore} punti</p>
-    <button on:click={() => dispatch('newGame')}>Nuova Partita</button>
-</div>
+{#if show}
+    <div class="score string visible" in:fly={{duration: 1000, x:-400, y:0}}>
+        <p class="score-size">Complimenti hai totalizzato</p>
+        <p class="score-size">{$totalScore} punti</p>
+        <button on:click={() => dispatch('newGame')}>Nuova Partita</button>
+    </div>
+{/if}
 
 <style>    
      @import url('https://fonts.googleapis.com/css2?family=Londrina+Solid:wght@100;300;400;900&display=swap');

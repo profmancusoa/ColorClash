@@ -40,6 +40,7 @@ class Board {
             c < this.#cols ? this.#board[r][c] : null;
     }
 
+    //given a cell return the North, South, East or West cell
     #getNCell(c) {
         return this.getCell(c.row - 1, c.col); 
     }
@@ -65,12 +66,14 @@ class Board {
         this.#preClash.length = 0;
     }
 
+    // calculate the group of contiguous cells of same type
     preClash(r, c) {
         this.#preClash.length = 0;
         let toVisit = new VistiList();
         let toClash = new VistiList();
 
-        let start = this.getCell(r, c); //initial cell from which start search of clashing cells
+        //initial cell from which start search of clashing cells
+        let start = this.getCell(r, c); 
         let startType = start.type;
         toVisit.add(start);
 
@@ -99,6 +102,8 @@ class Board {
             this.#preClash = toClash;
     }
 
+    //clash the selected group of contiguous cells
+    // and calculate current score
     clash() {
         let score = 0;
 
@@ -116,6 +121,7 @@ class Board {
         return score;
     }
 
+    // given a cell find the first above non empty cell in same column 
     findTop(cell) {
         let rowCheck = cell.row - 1;
         while(rowCheck >= 0) {
@@ -126,6 +132,7 @@ class Board {
         return null;
     }
 
+    // given a cell find the first right non empty cell in same row and
     findRight(cell) {
         let colCheck = cell.col + 1;
         while(colCheck <= this.#cols - 1) {
@@ -151,6 +158,7 @@ class Board {
         c2.col = tmpC;
     }
 
+    // allow cell to fall down by gravity
     #shiftDown() {
         for(let r = this.#rows - 1; r > 0; r--) {
             let emptyCells = this.#board[r].filter(c => c.status == Cell.STATUS_EMPTY);
@@ -162,6 +170,7 @@ class Board {
         }
     }
 
+    // in color clash world gravity goes top to down and right to left
     #shiftLeft() {
         let emptyCells = this.#board[this.#rows - 1].filter(c => c.status == Cell.STATUS_EMPTY);
         emptyCells.forEach(cell => {
@@ -180,6 +189,7 @@ class Board {
         this.#shiftLeft();
     }
 
+    // given a cell count how many neighbors of same type are present
     #cellCountNeighbors(cell) {
         let neighbors = [
             this.#getNCell(cell),

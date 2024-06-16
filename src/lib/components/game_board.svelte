@@ -11,9 +11,12 @@
     import { onMount } from "svelte";
     import { currentScore } from "../js/store.js";
 
+    export let show;
     let dispatch = createEventDispatcher();
     let board = [0][0];
     let mobile = false;
+
+    $: if(show == true) board = mobile ? new mobileBoard() : new desktopBoard();
 
     const isMobile = (ua) => {
 	    return ua.includes('Android') || ua.includes('Mobile') || ua.includes('iPhone');
@@ -21,7 +24,6 @@
 
     onMount(() => {
         mobile = isMobile(navigator.userAgent);
-        board = mobile ? new mobileBoard() : new desktopBoard();
     });
 
     //this is needed as board is not reactive
@@ -62,7 +64,7 @@
 </script>
 
 {#if board}
-<div class="board visible">
+<div class="board visible {show ? '' : 'hide'}">
     {#each {length:board.rows} as _, i}
         {#each {length: board.cols} as _, j}
             <UIcell 
@@ -78,6 +80,22 @@
 {/if}
 
 <style>    
+    .hide {
+        display: none !important;
+    }
+
+    @keyframes board-rotate {
+        from { 
+                rotate: 0deg;
+                scale: 0.1;
+            }
+
+        to { 
+                rotate: 720deg;
+                scale: 1;
+            }
+    }
+
     .board {
         border-radius: 0.8rem;
         padding: 0.3rem;
@@ -87,6 +105,8 @@
         grid-template-columns: repeat(15, 1fr);
         row-gap: 2px;
         column-gap: 2px;
+        animation-name: board-rotate;
+        animation-duration: 2s;
     }
 
 @media only screen and (orientation:portrait) and (max-width: 1023px) {
@@ -98,6 +118,8 @@
         grid-template-columns: repeat(8, 1fr);
         row-gap: 2px;
         column-gap: 2px;
+        animation-name: board-rotate;
+        animation-duration: 2s;
     }
 }
 
