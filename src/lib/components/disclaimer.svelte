@@ -1,3 +1,8 @@
+<!--
+- Show a disclaimer to user when turn phone on landscape
+- Game should be played only in portrait mode
+-->
+
 <div class="disclaimer">
     <p>Gioca a Color Clash in modalità portrait.</p>
 </div>

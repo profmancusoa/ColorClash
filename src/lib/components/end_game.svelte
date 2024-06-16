@@ -1,13 +1,17 @@
+<!-- 
+- Show end game scored points and allow for a new round of color clash
+-->
+
 <script>
     import { createEventDispatcher } from "svelte";
+    import { totalScore} from '../js/store.js';
 
-    export let score = 0;
     let dispatch = createEventDispatcher();
 </script>
 
 <div class="score string visible">
     <p class="score-size">Complimenti hai totalizzato</p>
-    <p class="score-size">{score} punti</p>
+    <p class="score-size">{$totalScore} punti</p>
     <button on:click={() => dispatch('newGame')}>Nuova Partita</button>
 </div>
 

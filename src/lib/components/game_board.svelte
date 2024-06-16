@@ -1,8 +1,15 @@
+<!-- 
+- Core of teh game, this is the Game Board component
+- This handle the major events and implement most of
+- the game logic
+ -->
+
 <script>
     import UIcell from "./uicell.svelte";
     import { desktopBoard, mobileBoard } from '$lib/js/board.js';
     import { createEventDispatcher } from "svelte";
     import { onMount } from "svelte";
+    import { currentScore } from "../js/store.js";
 
     let dispatch = createEventDispatcher();
     let board = [0][0];
@@ -43,8 +50,11 @@
         refresh();
 
         //dispatch new score event if greater than zero
-        if(score > 0) dispatch('score', score);
-
+        if(score > 0) {
+            //this is a trick to make sure currentScore is reactive
+            $currentScore = 0;
+            $currentScore = score;
+        }
         //check if game is over and notify game main
         if(board.isGameOver()) dispatch('gameOver');
     }

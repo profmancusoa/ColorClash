@@ -1,3 +1,9 @@
+<!-- 
+- A single cell of the game board
+- It handle the events for a single cell
+- and dispatch the proper events to the game board 
+ -->
+
 <script>
     import { Cell } from '$lib/js/cell';
     import { createEventDispatcher } from 'svelte';
@@ -5,6 +11,7 @@
     export let cell;
     export let mobile;
     const TOUCH_THRESHOLD = 200;
+    const PRECLASHONOFF = 1500; 
     let tStartTime = 0;
     let tEndTime = 0;
     let preClash = false;
@@ -21,22 +28,18 @@
     }
 
     const clash = () => {
-        console.log("CLICK")
         if(cell.status != Cell.STATUS_EMPTY)
             dispatch('clash', {r: cell.row, c: cell.col});
     }
 
-    const touchStart = () =>{
-        // console.log("TSTART:", Date.now())
-        console.log("START")
-        // tStartTime = Date.now();
+    const touchStart = () => {
         if(preClash == false) {
             preClash = true;
             get_focus();
             setTimeout(() => {
                 lost_focus();
                 preClash = false;
-            }, 1500);
+            }, PRECLASHONOFF);
         } else {
             clash();
         }
