@@ -14,5 +14,5 @@
     "start_url": "/index.html",
     "scope": "/",
     "display": "standalone",
-    "background_color": "#ffffff1a"
+    "background_color": "#000000"
 }

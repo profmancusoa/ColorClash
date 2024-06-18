@@ -1,4 +1,3 @@
-import { number } from "mathjs";
 import { Cell } from "./cell.js"; 
 import { VistiList } from "./visit_list.js";
 
